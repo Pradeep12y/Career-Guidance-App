@@ -1,20 +1,18 @@
 import type { Metadata } from 'next';
-import { Inter, Roboto_Mono } from 'next/font/google'; // Changed import
+import { Inter, Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from '@/components/layout/header';
 import { ResultsProvider } from '@/context/results-context';
 
-// Setup Inter as the primary sans-serif font
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-sans', // Exposes a CSS variable for Tailwind
+  variable: '--font-sans', 
 });
 
-// Setup Roboto_Mono as the primary monospace font
 const robotoMono = Roboto_Mono({
   subsets: ['latin'],
-  variable: '--font-mono', // Exposes a CSS variable for Tailwind
+  variable: '--font-mono', 
 });
 
 export const metadata: Metadata = {
@@ -29,7 +27,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Apply font variables to the HTML element and use Tailwind's font-sans utility on body */}
       <body className={`${inter.variable} ${robotoMono.variable} antialiased font-sans`}>
         <ResultsProvider>
           <div className="flex flex-col min-h-screen">

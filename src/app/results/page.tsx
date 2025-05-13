@@ -1,25 +1,25 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useResults } from '@/context/results-context';
 import { CareerResults } from '@/components/career-results';
 import { Button } from '@/components/ui/button';
 import { Download, RotateCcw, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export default function ResultsPage() {
   const router = useRouter();
   const { results, isLoading, setResults, setIsLoading } = useResults();
   const { toast } = useToast();
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
   useEffect(() => {
-    // If there are no results and not loading, redirect to home.
-    // This handles direct navigation to /results or page refresh after session storage clear.
     if (!isLoading && !results) {
-      // Small delay to allow context to potentially load from session storage
       const timer = setTimeout(() => {
-        if (!sessionStorage.getItem('careerCompassResults')) { // Check session storage directly before redirecting
+        if (!sessionStorage.getItem('careerCompassResults')) {
             toast({
                 title: "No results found",
                 description: "Redirecting to the homepage to start a new search.",
@@ -32,12 +32,81 @@ export default function ResultsPage() {
     }
   }, [results, isLoading, router, toast]);
 
-  const handlePrint = () => {
-    window.print();
+  const handleDownloadPdf = async () => {
+    setIsDownloadingPdf(true);
+    toast({
+      title: "Generating PDF...",
+      description: "Please wait while your PDF is being prepared.",
+    });
+
+    const printableArea = document.getElementById('printable-area');
+    if (!printableArea) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not find printable content.",
+      });
+      setIsDownloadingPdf(false);
+      return;
+    }
+
+    try {
+      const canvas = await html2canvas(printableArea, { 
+        scale: 2, // Improve resolution
+        useCORS: true, // Important if there are external images/assets
+        logging: false,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF({
+        orientation: 'p', // portrait
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      
+      // Calculate the aspect ratio of the image
+      const aspectRatio = canvasWidth / canvasHeight;
+      
+      let imgRenderWidth = pdfWidth - 20; // pdfWidth with some margin
+      let imgRenderHeight = imgRenderWidth / aspectRatio;
+
+      // If the calculated height is greater than the PDF page height (minus margins),
+      // then we need to scale based on height instead
+      if (imgRenderHeight > pdfHeight - 20) { // pdfHeight with some margin
+        imgRenderHeight = pdfHeight - 20;
+        imgRenderWidth = imgRenderHeight * aspectRatio;
+      }
+      
+      // Center the image on the PDF page
+      const xOffset = (pdfWidth - imgRenderWidth) / 2;
+      const yOffset = (pdfHeight - imgRenderHeight) / 2;
+
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgRenderWidth, imgRenderHeight);
+      pdf.save('career-suggestions.pdf');
+      
+      toast({
+        title: "PDF Downloaded",
+        description: "Your career suggestions PDF has been downloaded.",
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast({
+        variant: "destructive",
+        title: "PDF Generation Failed",
+        description: "An error occurred while generating the PDF. Please try again.",
+      });
+    } finally {
+      setIsDownloadingPdf(false);
+    }
   };
 
   const handleStartOver = () => {
-    setResults(null); // Clear results from context and session storage
+    setResults(null); 
     setIsLoading(false);
     router.push('/');
   };
@@ -52,11 +121,7 @@ export default function ResultsPage() {
     );
   }
 
-  // This check is important for when results become null after being set (e.g. start over)
   if (!results) {
-     // This state could be hit briefly if redirection hasn't happened yet or after "Start Over"
-     // A more robust loading/empty state can be here, or rely on the useEffect redirect.
-     // For now, keep it minimal as useEffect should handle redirection.
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
          <p className="text-muted-foreground mt-2">Loading results or no results to display. You might be redirected shortly.</p>
@@ -69,9 +134,24 @@ export default function ResultsPage() {
     <div className="py-8 md:py-12">
       <CareerResults results={results} />
       <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4 no-print">
-        <Button onClick={handlePrint} variant="outline" size="lg" className="text-accent border-accent hover:bg-accent hover:text-accent-foreground">
-          <Download className="mr-2 h-5 w-5" />
-          Download as PDF
+        <Button 
+          onClick={handleDownloadPdf} 
+          variant="outline" 
+          size="lg" 
+          className="text-accent border-accent hover:bg-accent hover:text-accent-foreground"
+          disabled={isDownloadingPdf}
+        >
+          {isDownloadingPdf ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <Download className="mr-2 h-5 w-5" />
+              Download as PDF
+            </>
+          )}
         </Button>
         <Button onClick={handleStartOver} variant="default" size="lg" className="bg-primary hover:bg-primary/90">
           <RotateCcw className="mr-2 h-5 w-5" />
