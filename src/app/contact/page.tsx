@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Mail, Phone, Linkedin, Github, MessageSquare, Info } from "lucide-react";
@@ -28,8 +29,8 @@ export default function ContactPage() {
     {
       name: "LinkedIn",
       icon: <Linkedin className="h-6 w-6" />,
-      href: "https://www.linkedin.com/in/pradeeprahangdale/", 
-      handle: "@pradeeprahangdale"
+      href: "https://www.linkedin.com/in/pradeep-rahangdale-6856b3289?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      handle: "Pradeep Rahangdale" // More descriptive handle
     },
     {
       name: "GitHub",
