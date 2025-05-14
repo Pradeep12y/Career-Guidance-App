@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Mail, Phone, Linkedin, Github, Instagram, MessageSquare, Info } from "lucide-react";
+import { Mail, Phone, Linkedin, Github, MessageSquare, Info } from "lucide-react";
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
@@ -28,26 +28,20 @@ export default function ContactPage() {
     {
       name: "LinkedIn",
       icon: <Linkedin className="h-6 w-6" />,
-      href: "https://www.linkedin.com/in/pradeeprahangdale/", // Replace with your actual LinkedIn profile URL
+      href: "https://www.linkedin.com/in/pradeeprahangdale/", 
       handle: "@pradeeprahangdale"
     },
     {
       name: "GitHub",
       icon: <Github className="h-6 w-6" />,
-      href: "https://github.com/Pradeeprahangdale", // Replace with your actual GitHub profile URL
-      handle: "@Pradeeprahangdale"
+      href: "https://github.com/Pradeep12y", 
+      handle: "@Pradeep12y"
     },
     {
       name: "WhatsApp",
       icon: <WhatsAppIcon />,
-      href: "https://wa.me/9131302329", // Your WhatsApp number
+      href: "https://wa.me/9131302329", 
       handle: "+91 9131302329"
-    },
-    {
-      name: "Instagram",
-      icon: <Instagram className="h-6 w-6" />,
-      href: "https://www.instagram.com/pradeep_rahangdale_/", // Replace with your actual Instagram profile URL
-      handle: "@pradeep_rahangdale_"
     },
   ];
 
