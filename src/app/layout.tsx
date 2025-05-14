@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from '@/components/layout/header';
 import { ResultsProvider } from '@/context/results-context';
+import { WhatsAppFAB } from '@/components/whatsapp-fab';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -16,7 +17,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Career Compass',
+  title: 'Ai Career Guide',
   description: 'AI-Powered Career Guidance',
 };
 
@@ -35,10 +36,11 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="bg-muted text-muted-foreground p-4 text-center text-sm no-print">
-              © {new Date().getFullYear()} Career Compass. All rights reserved.
+              © {new Date().getFullYear()} Ai Career Guide. All rights reserved.
             </footer>
           </div>
           <Toaster />
+          <WhatsAppFAB phoneNumber="9131302329" message="Hello Ai Career Guide" />
         </ResultsProvider>
       </body>
     </html>
