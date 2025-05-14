@@ -119,8 +119,8 @@ export async function handleContactFormSubmit(formData: ContactFormValues): Prom
   */
 
   // Current behavior: Log to console and simulate success.
-  // Remove or replace this section once actual email sending is implemented.
-  console.log("Contact form submitted (actual email sending not implemented):", validationResult.data);
+  // This is the simulation of an email service for development.
+  console.log("Contact form submitted (simulation - not a real email):", validationResult.data);
   console.log(`Simulating email to rahangdalepradeep714@gmail.com:`);
   console.log(`Subject: New Contact Form Submission from ${name}`);
   console.log(`Name: ${name}, Email: ${email}`);
@@ -128,7 +128,7 @@ export async function handleContactFormSubmit(formData: ContactFormValues): Prom
 
   return {
     success: true,
-    // Update the message to reflect that the email is simulated for now.
-    message: "Your message has been submitted successfully! (Admin email notification is currently simulated). We will get back to you soon.",
+    message: "Your message has been submitted! For development, details are logged to the server console instead of sending a real email. We will get back to you soon.",
   };
 }
+
