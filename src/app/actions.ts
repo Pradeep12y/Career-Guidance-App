@@ -63,21 +63,72 @@ export async function handleContactFormSubmit(formData: ContactFormValues): Prom
     };
   }
 
-  // In a real application, you would typically send an email or save to a database here.
-  // For example, using a service like Resend, SendGrid, or Nodemailer for emails,
-  // or interacting with a backend API to forward a message (e.g., to WhatsApp via an API).
-  // Since direct WhatsApp/SMS sending from server actions without a third-party API is complex and
-  // potentially insecure for client-side phone numbers, we'll simulate success for this prototype.
-  
-  console.log("Contact form submitted:", validationResult.data);
-  // You could log this data or send an email to 'rahangdalepradeep714@gmail.com'
-  // with the content:
-  // Name: ${validationResult.data.name}
-  // Email: ${validationResult.data.email}
-  // Message: ${validationResult.data.message}
+  const { name, email, message } = validationResult.data;
+
+  // TODO: Implement actual email sending here.
+  // To send emails, you'll need to use an email service provider like Resend, SendGrid, or Nodemailer.
+  // 1. Choose a service and sign up.
+  // 2. Install their SDK (e.g., `npm install resend` or `yarn add resend`).
+  // 3. Configure API keys in your environment variables (e.g., create a .env.local file).
+  // 4. Import the SDK and use it to send the email below.
+
+  /*
+  // CONCEPTUAL EXAMPLE using Resend:
+  // Make sure to install the 'resend' package: `npm install resend`
+  // And set RESEND_API_KEY in your .env.local file.
+
+  // import { Resend } from 'resend';
+  // const resend = new Resend(process.env.RESEND_API_KEY);
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Ai Career Guide <onboarding@resend.dev>', // Replace with your "from" email (Resend might require a verified domain)
+      to: ['rahangdalepradeep714@gmail.com'],      // Your email address to receive notifications
+      reply_to: email,                             // Set sender's email as reply-to
+      subject: `New Contact Form Submission from ${name} - Ai Career Guide`,
+      html: `
+        <h1>New Contact Form Submission</h1>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message.replace(/\n/g, "<br>")}</p>
+      `,
+    });
+
+    if (error) {
+      console.error("Error sending contact email via Resend:", error);
+      return {
+        success: false,
+        message: "Your message was submitted, but there was an error sending the email notification. Please try again later.",
+      };
+    }
+
+    console.log("Contact form submitted and email sent via Resend:", validationResult.data, data);
+    return {
+      success: true,
+      message: "Your message has been sent successfully! We will get back to you soon.",
+    };
+
+  } catch (exception) {
+    console.error("Exception sending contact email:", exception);
+    return {
+      success: false,
+      message: "Your message was submitted, but an unexpected error occurred while sending the email notification.",
+    };
+  }
+  */
+
+  // Current behavior: Log to console and simulate success.
+  // Remove or replace this section once actual email sending is implemented.
+  console.log("Contact form submitted (actual email sending not implemented):", validationResult.data);
+  console.log(`Simulating email to rahangdalepradeep714@gmail.com:`);
+  console.log(`Subject: New Contact Form Submission from ${name}`);
+  console.log(`Name: ${name}, Email: ${email}`);
+  console.log(`Message: ${message}`);
 
   return {
     success: true,
-    message: "Your message has been sent successfully! We will get back to you soon.",
+    // Update the message to reflect that the email is simulated for now.
+    message: "Your message has been submitted successfully! (Admin email notification is currently simulated). We will get back to you soon.",
   };
 }
